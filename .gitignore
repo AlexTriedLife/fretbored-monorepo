@@ -1,0 +1,16 @@
+# Node/Web Frontend
+node_modules/
+dist/
+.env
+
+# Rust/Cargo Backend
+target/
+**/*.rs.bk
+
+# Wasm generated output
+pkg/
+frontend/pkg/
+
+# OS generated files
+.DS_Store
+Thumbs.db
