@@ -1,8 +1,8 @@
 use crate::theory::{MidiNote, Note};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 // The notes of each string on the instrument and the corresponding midi numbers
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Tuning {
     pub name: String,
     pub strings: Vec<MidiNote>,
@@ -19,7 +19,7 @@ impl Tuning {
     }
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Instrument {
     pub name: String,
     pub tunings: Vec<Tuning>,

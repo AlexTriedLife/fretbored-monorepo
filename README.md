@@ -26,10 +26,10 @@ The project is split bifurcated into a high-performance Rust core which handles 
 ## Roadmap & Task List
 
 ### Phase 1: The WASM Bridge
-- [ ] Add `wasm-bindgen` to `Cargo.toml`.
-- [ ] Write wrapper functions in Rust to expose `InstrumentDatabase::load()` and `note_at_fret()`.
-- [ ] Compile the engine to a node module using `wasm-pack`.
-- [ ] Import and initialize the WASM module in the React frontend.
+- [ x ] Add `wasm-bindgen` to `Cargo.toml`.
+- [ x ] Write wrapper functions in Rust to expose `InstrumentDatabase::load()` and `note_at_fret()`.
+- [ x ] Compile the engine to a node module using `wasm-pack`.
+- [ x ] Import and initialize the WASM module in the React frontend.
 
 ### Phase 2: Core UI Components
 - [ ] **State Management:** Create a custom React hook (e.g., `useInstrument`) to manage active tunings and interface with the WASM backend.
