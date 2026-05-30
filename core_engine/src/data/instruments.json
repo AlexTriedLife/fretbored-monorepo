@@ -1,9 +1,19 @@
 [
-    {
-        "name": "Guitar",
-        "tunings": [
-            { "name": "Standard", "strings": ["E4", "B3", "G3", "D3", "A2", "E2"]}
+  {
+    "name": "Guitar",
+    "tunings": [
+      { "name": "Standard", "strings": ["E4", "B3", "G3", "D3", "A2", "E2"] },
+      { "name": "Drop-D", "strings": ["E4", "B3", "G3", "D3", "A2", "D2"] }
+    ]
+  },
 
-        ]
-    }
+  {
+    "name": "Bass",
+    "tunings": [{ "name": "Standard", "strings": ["G2", "D2", "A1", "E1"] }]
+  },
+
+  {
+    "name": "Ukulele",
+    "tunings": [{ "name": "Standard", "strings": ["A4", "E4", "C4", "G4"] }]
+  }
 ]
