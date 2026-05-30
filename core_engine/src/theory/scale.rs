@@ -2,11 +2,13 @@ use crate::theory::Note;
 use crate::theory::interval::{Interval, calculate_target_note};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-// Major and minor for now
+// Major, minor, and pentatonic for now
 // TODO: Add modes and different scales
 pub enum ScaleType {
     Major,
     NaturalMinor,
+    MajorPentatonic,
+    MinorPentatonic,
 }
 
 impl ScaleType {
@@ -27,6 +29,18 @@ impl ScaleType {
                 Interval::PerfectFourth,
                 Interval::PerfectFifth,
                 Interval::MinorSixth,
+                Interval::MinorSeventh,
+            ],
+            ScaleType::MajorPentatonic => &[
+                Interval::MajorSecond,
+                Interval::MajorThird,
+                Interval::PerfectFifth,
+                Interval::MajorSixth,
+            ],
+            ScaleType::MinorPentatonic => &[
+                Interval::MinorThird,
+                Interval::PerfectFourth,
+                Interval::PerfectFifth,
                 Interval::MinorSeventh,
             ],
         }
@@ -128,6 +142,27 @@ mod tests {
                 Note::A,
                 Note::B,
             ]
+        );
+    }
+    #[test]
+    fn test_generate_major_pentatonic_scale() {
+        let c_maj_pent = generate_scale(Note::C, ScaleType::MajorPentatonic);
+
+        // Expected: C, D, E, G, A
+        assert_eq!(
+            c_maj_pent,
+            vec![Note::C, Note::D, Note::E, Note::G, Note::A,]
+        );
+    }
+
+    #[test]
+    fn test_generate_minor_pentatonic_scale() {
+        let a_min_pent = generate_scale(Note::A, ScaleType::MinorPentatonic);
+
+        // Expected: A, C, D, E, G
+        assert_eq!(
+            a_min_pent,
+            vec![Note::A, Note::C, Note::D, Note::E, Note::G,]
         );
     }
 }
