@@ -1,4 +1,4 @@
-use crate::instrument::tuning::{GuitarTunings, StandardTunings, Tuning};
+use crate::instrument::tuning::{BassTunings, GuitarTunings, StandardTunings, Tuning};
 use std::collections::HashMap;
 
 // Index instruments and tuning
@@ -19,8 +19,14 @@ impl TuningRegistry {
         // GUITAR TUNINGS
         tunings.insert("guitar/standard", StandardTunings::guitar_standard());
         tunings.insert("guitar/drop_d", GuitarTunings::guitar_drop_d());
+        tunings.insert("guitar/eb_standard", GuitarTunings::guitar_eb_standard());
+        tunings.insert(
+            "guitar/full_step_down",
+            GuitarTunings::guitar_full_step_down(),
+        );
         // BASS TUNINGS
         tunings.insert("bass/standard", StandardTunings::bass_standard());
+        tunings.insert("bass/drop_d", BassTunings::bass_drop_d());
         // UKULELE TUNINGS
         tunings.insert("ukulele/standard", StandardTunings::ukulele_standard());
 

@@ -58,7 +58,7 @@ impl StandardTunings {
         ];
 
         Tuning {
-            name: "Standard E",
+            name: "E Standard",
             strings: STRINGS,
         }
     }
@@ -94,6 +94,42 @@ impl GuitarTunings {
 
         Tuning {
             name: "Drop D",
+            strings: STRINGS,
+        }
+    }
+
+    pub fn guitar_eb_standard() -> Tuning<'static> {
+        // High to low
+        // Note Enum uses sharps as the default enharmonic equivalent
+        // Notes will display with flat as the default spelling when tuning is parsed
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::DSharp.value(), 4), // Eb4
+            midi_from_note(Note::ASharp.value(), 3), // Bb3
+            midi_from_note(Note::FSharp.value(), 3), // Gb3
+            midi_from_note(Note::CSharp.value(), 3), // Db3
+            midi_from_note(Note::GSharp.value(), 2), // Ab2
+            midi_from_note(Note::DSharp.value(), 2), // Eb2
+        ];
+
+        Tuning {
+            // Might rename half-step down
+            name: "Eb standard",
+            strings: STRINGS,
+        }
+    }
+    pub fn guitar_full_step_down() -> Tuning<'static> {
+        // High to low
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::D.value(), 4), // D4
+            midi_from_note(Note::A.value(), 3), // A3
+            midi_from_note(Note::F.value(), 3), // F3
+            midi_from_note(Note::C.value(), 3), // C3
+            midi_from_note(Note::G.value(), 2), // G2
+            midi_from_note(Note::D.value(), 2), // D2
+        ];
+
+        Tuning {
+            name: "Full Step Down",
             strings: STRINGS,
         }
     }
