@@ -83,7 +83,7 @@ impl TryFrom<String> for MidiNote {
 }
 
 // The 12 chromatic pitches
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Note {
     C,
     CSharp,

@@ -1,7 +1,8 @@
 use crate::theory::Note;
 use crate::theory::interval::{Interval, calculate_target_note};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 // Major, minor, and pentatonic for now
 // TODO: Add modes and different scales
 pub enum ScaleType {

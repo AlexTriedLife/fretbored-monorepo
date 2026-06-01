@@ -1,9 +1,10 @@
 use crate::theory::Note;
 use crate::theory::interval::{Interval, calculate_target_note};
+use serde::{Deserialize, Serialize};
 
 // Use composition and separate the chord's quality(triad/sus) from the extension
 // It is slightly slower but the goal of this project is to handle extremely complex chords
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 pub enum ChordQuality {
     Major,
     Minor,
@@ -14,7 +15,7 @@ pub enum ChordQuality {
 }
 
 // The chord's extension m7 m9
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Extension {
     // Not all chords have extensions i.e triads
     None,
@@ -43,14 +44,14 @@ pub enum Extension {
 }
 
 // ChordType is the abstract mathematical formula of the chord
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChordType {
     pub quality: ChordQuality,
     pub extension: Extension,
 }
 
 // Chord is the concrete instance of the chord
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Chord {
     pub root: Note,
     pub chord_type: ChordType,
