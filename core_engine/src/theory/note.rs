@@ -144,6 +144,130 @@ pub const fn midi_from_note(note_val: u8, octave: i8) -> MidiNote {
     MidiNote(((octave + 1) * 12 + note_val as i8) as u8)
 }
 
+// For handling enharmonic equivalents
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Accidental {
+    Natural,
+    Sharp,
+    Flat,
+    DoubleSharp,
+    DoubleFlat,
+}
+
+impl Accidental {
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            Accidental::Natural => "",
+            Accidental::Sharp => "#",
+            Accidental::Flat => "b",
+            Accidental::DoubleSharp => "##",
+            Accidental::DoubleFlat => "bb",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NoteSpelling {
+    // The actual pitch of the note
+    pub pitch: Note,
+    pub letter: char,
+    pub accidental: Accidental,
+}
+
+impl NoteSpelling {
+    // What engine uses b default
+    pub fn prefer_sharp(pitch: Note) -> Self {
+        let (letter, accidental) = match pitch {
+            // Naturals only have one common spelling
+            Note::C => ('C', Accidental::Natural),
+            Note::D => ('D', Accidental::Natural),
+            Note::E => ('E', Accidental::Natural),
+            Note::F => ('F', Accidental::Natural),
+            Note::G => ('G', Accidental::Natural),
+            Note::A => ('A', Accidental::Natural),
+            Note::B => ('B', Accidental::Natural),
+
+            // Accidentals with sharp spelling preferred
+            Note::CSharp => ('C', Accidental::Sharp),
+            Note::DSharp => ('D', Accidental::Sharp),
+            Note::FSharp => ('F', Accidental::Sharp),
+            Note::GSharp => ('G', Accidental::Sharp),
+            Note::ASharp => ('A', Accidental::Sharp),
+        };
+        Self {
+            pitch,
+            letter,
+            accidental,
+        }
+    }
+
+    // Primary flat spelling (flat from sharp)
+
+    pub fn prefer_flat(pitch: Note) -> Self {
+        let (letter, accidental) = match pitch {
+            // Accidentals with flat spelling preferred
+            Note::CSharp => ('D', Accidental::Flat),
+            Note::DSharp => ('E', Accidental::Flat),
+            Note::FSharp => ('G', Accidental::Flat),
+            Note::GSharp => ('A', Accidental::Flat),
+            Note::ASharp => ('B', Accidental::Flat),
+
+            // Naturals fall back to sharp spelling which matches to natural
+            _ => return Self::prefer_sharp(pitch),
+        };
+        Self {
+            pitch,
+            letter,
+            accidental,
+        }
+    }
+
+    // For C = B#, E = Fb
+    pub fn enharmonic_alt(pitch: Note) -> Option<Self> {
+        let (letter, accidental) = match pitch {
+            // C = B#
+            Note::C => ('B', Accidental::Sharp),
+            // E = Fb
+            Note::E => ('F', Accidental::Flat),
+            // F = E#
+            Note::F => ('E', Accidental::Sharp),
+            // B = Cb
+            Note::B => ('C', Accidental::Flat),
+            // No single accidental enharmonics exist for any other notes
+            // May add DoubleSharp and DoubleFlat later
+            _ => return None,
+        };
+        Some(Self {
+            pitch,
+            letter,
+            accidental,
+        })
+    }
+
+    // All valid spellings for a pitch, in order: sharp, flat, enharmonic alt
+    pub fn all_spellings(pitch: Note) -> Vec<Self> {
+        let mut spellings = vec![Self::prefer_sharp(pitch)];
+
+        // Add flat spelling if it differs from sharp
+        let flat = Self::prefer_flat(pitch);
+        if flat != spellings[0] {
+            spellings.push(flat);
+        }
+
+        // Add enharmonic alt if one exists
+        if let Some(alt) = Self::enharmonic_alt(pitch) {
+            spellings.push(alt);
+        }
+
+        spellings
+    }
+
+    // Display the note {letter}{accidental} -> C#
+    pub fn display(&self) -> String {
+        format!("{}{}", self.letter, self.accidental.symbol())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -175,5 +299,57 @@ mod tests {
         assert!(MidiNote::try_from("H4".to_string()).is_err()); // Invalid pitch letter
         assert!(MidiNote::try_from("C".to_string()).is_err()); // Missing octave
         assert!(MidiNote::try_from("G10".to_string()).is_err()); // Out of MIDI range (>127)
+    }
+
+    // Test note spellings
+    #[test]
+    fn test_enharmonic_alts() {
+        // C = B#
+        let b_sharp = NoteSpelling::enharmonic_alt(Note::C).unwrap();
+        assert_eq!(b_sharp.display(), "B#");
+        assert_eq!(b_sharp.pitch, Note::C); // same pitch class
+
+        // B = Cb
+        let c_flat = NoteSpelling::enharmonic_alt(Note::B).unwrap();
+        assert_eq!(c_flat.display(), "Cb");
+        assert_eq!(c_flat.pitch, Note::B);
+
+        // E = Fb
+        let f_flat = NoteSpelling::enharmonic_alt(Note::E).unwrap();
+        assert_eq!(f_flat.display(), "Fb");
+
+        // F = E#
+        let e_sharp = NoteSpelling::enharmonic_alt(Note::F).unwrap();
+        assert_eq!(e_sharp.display(), "E#");
+    }
+
+    #[test]
+    fn test_natural_notes_have_no_flat_alt() {
+        // D, G, A have no common flat enharmonic — should fall back to natural
+        assert_eq!(NoteSpelling::prefer_flat(Note::D).display(), "D");
+        assert_eq!(NoteSpelling::prefer_flat(Note::G).display(), "G");
+        assert_eq!(NoteSpelling::prefer_flat(Note::A).display(), "A");
+    }
+
+    #[test]
+    fn test_all_spellings_c() {
+        let spellings = NoteSpelling::all_spellings(Note::C);
+        let names: Vec<String> = spellings.iter().map(|s| s.display()).collect();
+        assert_eq!(names, vec!["C", "B#"]);
+    }
+
+    #[test]
+    fn test_all_spellings_csharp() {
+        let spellings = NoteSpelling::all_spellings(Note::CSharp);
+        let names: Vec<String> = spellings.iter().map(|s| s.display()).collect();
+        assert_eq!(names, vec!["C#", "Db"]);
+    }
+
+    #[test]
+    fn test_pitch_class_preserved() {
+        // Enharmonic spellings must never change the underlying pitch
+        for spelling in NoteSpelling::all_spellings(Note::ASharp) {
+            assert_eq!(spelling.pitch, Note::ASharp);
+        }
     }
 }
