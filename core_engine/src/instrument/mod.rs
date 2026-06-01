@@ -2,6 +2,7 @@ pub mod tuning;
 pub use tuning::*;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+// If Orientation LeftHanded, reverse the Tuning slice
 pub enum Orientation {
     #[default]
     RightHanded,
@@ -23,4 +24,16 @@ impl<'a> FretBoardConfig<'a> {
             orientation,
         }
     }
+}
+
+#[test]
+fn standard_guitar_test() {
+    let guitar = FretBoardConfig::new(
+        StandardTunings::guitar_standard(),
+        24,
+        Orientation::RightHanded,
+    );
+    assert_eq!(guitar.tuning, StandardTunings::guitar_standard());
+    assert_eq!(guitar.fret_count, 24);
+    assert_eq!(guitar.orientation, Orientation::RightHanded);
 }

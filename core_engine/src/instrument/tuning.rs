@@ -24,7 +24,13 @@ impl<'a> Tuning<'a> {
 // Standard tuning for an instrument
 pub struct StandardTunings;
 
+// Guitar Tunings
+pub struct GuitarTunings;
+// Bass Tunings
+pub struct BassTunings;
+
 impl StandardTunings {
+    // GUITAR Standard TUNING
     pub fn guitar_standard() -> Tuning<'static> {
         // High to low
         const STRINGS: &[MidiNote] = &[
@@ -37,7 +43,74 @@ impl StandardTunings {
         ];
 
         Tuning {
+            name: "E Standard",
+            strings: STRINGS,
+        }
+    }
+    // BASS STANDARD TUNING
+    pub fn bass_standard() -> Tuning<'static> {
+        // High to low
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::G.value(), 2), // G2
+            midi_from_note(Note::D.value(), 2), // D2
+            midi_from_note(Note::A.value(), 1), // A1
+            midi_from_note(Note::E.value(), 1), // E1
+        ];
+
+        Tuning {
             name: "Standard E",
+            strings: STRINGS,
+        }
+    }
+
+    // UKULELE STANDARD TUNING
+    pub fn ukulele_standard() -> Tuning<'static> {
+        // High to low
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::G.value(), 4), // G4
+            midi_from_note(Note::E.value(), 4), // E4
+            midi_from_note(Note::C.value(), 4), // C4
+            midi_from_note(Note::A.value(), 4), // A4
+        ];
+
+        Tuning {
+            name: "Standard",
+            strings: STRINGS,
+        }
+    }
+}
+
+impl GuitarTunings {
+    pub fn guitar_drop_d() -> Tuning<'static> {
+        // High to low
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::E.value(), 4), // E4
+            midi_from_note(Note::B.value(), 3), // B3
+            midi_from_note(Note::G.value(), 3), // G3
+            midi_from_note(Note::D.value(), 3), // D3
+            midi_from_note(Note::A.value(), 2), // A2
+            midi_from_note(Note::D.value(), 2), // D2
+        ];
+
+        Tuning {
+            name: "Drop D",
+            strings: STRINGS,
+        }
+    }
+}
+
+impl BassTunings {
+    pub fn bass_drop_d() -> Tuning<'static> {
+        // High to low
+        const STRINGS: &[MidiNote] = &[
+            midi_from_note(Note::G.value(), 2), // G2
+            midi_from_note(Note::D.value(), 2), // D2
+            midi_from_note(Note::A.value(), 1), // A1
+            midi_from_note(Note::D.value(), 1), // D1
+        ];
+
+        Tuning {
+            name: "Drop D",
             strings: STRINGS,
         }
     }
