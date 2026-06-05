@@ -8,6 +8,12 @@ pub struct TuningRegistry {
     tunings: HashMap<&'static str, Tuning<'static>>,
 }
 
+impl Default for TuningRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TuningRegistry {
     pub fn new() -> Self {
         let mut tunings = HashMap::new();
