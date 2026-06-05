@@ -19,6 +19,7 @@ The project is bifurcated into a high-performance, zero-allocation Rust core whi
 - **Advanced Theory Engine:** - **Notes & Enharmonics:** Complete Scientific Pitch Notation (SPN) parsing to MIDI, with full support for note spellings and enharmonic equivalents (sharps, flats).
   - **Intervals & Scales:** Modular interval math driving a generator for Major, Minor, and Pentatonic scales.
   - **Composable Chords:** Highly scalable chord architecture separating base triads (`ChordQuality`) from modular `Extension`s (6ths, 7ths, 9ths, 11ths, 13ths, and alterations).
+  - **Mapping Engine:** Implemented an $O(1)$ bitmask search algorithm to map theoretical note clusters onto physical coordinate matrices.
 - **WASM Bridge:** Engine logic successfully exported to WebAssembly, exposing `get_note_at_fret` and `list_tunings` APIs to the frontend.
 
 ### Frontend (`frontend`)
@@ -47,7 +48,7 @@ The project is bifurcated into a high-performance, zero-allocation Rust core whi
 
 ### Phase 3: The Mapping Algorithm (Current Phase)
 
-- [ ] **Coordinate Matrix:** Write the core search algorithm (`find_notes_on_fretboard`) that takes a generated `Chord` or Scale `Vec<Note>` and scans a `FretBoardConfig` to return all physical `(string_index, fret_number)` coordinates.
+- [x] **Coordinate Matrix:** Write the core search algorithm (`find_notes_on_fretboard`) that takes a generated `Chord` or Scale `Vec<Note>` and scans a `FretBoardConfig` to return all physical `(string_index, fret_number)` coordinates.
 
 ### Phase 4: Frontend Integration & UI
 
