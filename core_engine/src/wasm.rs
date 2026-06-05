@@ -1,4 +1,7 @@
 use crate::instrument::registry::TuningRegistry;
+use crate::instrument::{FretBoardConfig, Orientation};
+use crate::mapping::find_notes_on_fretboard;
+use crate::theory::Note;
 // Registry should be singleton
 use once_cell::sync::Lazy;
 use serde_wasm_bindgen::to_value;
@@ -28,6 +31,32 @@ pub fn get_note_at_fret(
 pub fn list_tunings() -> JsValue {
     let keys = REGISTRY.keys();
     to_value(&keys).unwrap_or(JsValue::NULL)
+}
+
+// Get fret and string where given notes appear
+#[wasm_bindgen]
+pub fn get_fretboard_coordinates(
+    tuning_key: &str,
+    fret_count: u8,
+    note_values: &[u8],
+) -> Result<JsValue, JsValue> {
+    // Get tuning ref from registry
+    let tuning_ref = REGISTRY
+        .get(tuning_key)
+        .ok_or_else(|| JsValue::from_str(&format!("Unknown tuning: '{}'", tuning_key)))?;
+
+    let config = FretBoardConfig::new(*tuning_ref, fret_count, Orientation::RightHanded);
+
+    // Convert u8 notes to Note enums
+    let notes: Vec<Note> = note_values
+        .iter()
+        .map(|&val| Note::from_midi(val))
+        .collect();
+
+    // Find locations of notes on fretboard
+    let coords = find_notes_on_fretboard(&notes, &config);
+
+    to_value(&coords).map_err(|e| JsValue::from_str(&e.to_string()))
 }
 
 #[cfg(test)]
