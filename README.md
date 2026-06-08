@@ -20,6 +20,7 @@ The project is driven by a high-performance, zero-allocation Rust core which han
   - **Intervals & Scales:** Modular interval math driving a generator for Major, Minor, and Pentatonic scales.
   - **Composable Chords:** Highly scalable chord architecture separating base triads (`ChordQuality`) from modular `Extension`s (6ths, 7ths, 9ths, 11ths, 13ths, and alterations).
   - **Mapping Engine:** Implemented an $O(1)$ bitmask search algorithm to map theoretical note clusters onto physical coordinate matrices.
+  - - **Voicing Engine:** Sliding window backtracking search across the fretboard to enumerate playable chord shapes. Validates voicings via 12-bit pitch-class bitmask with configurable strictness (capo position, max hand stretch, open strings, completeness).
 
 ---
 
@@ -41,11 +42,11 @@ The project is driven by a high-performance, zero-allocation Rust core which han
 
 - [x] **Coordinate Matrix:** Write the core search algorithm (`find_notes_on_fretboard`) that takes a generated `Chord` or Scale `Vec<Note>` and scans a `FretBoardConfig` to return all physical `(string_index, fret_number)` coordinates.
 
-### Phase 4: Voicing Engine (Current Phase)
+### Phase 4: Voicing Engine (Complete)
 
-- [ ] Build a filter to analyze raw fretboard coordinates and output ergonomic, playable chord voicings based on physical hand-stretch constraints.
+- [x] Build a filter to analyze raw fretboard coordinates and output ergonomic, playable chord voicings based on physical hand-stretch constraints.
 
-### Phase 5: Stylized CLI
+### Phase 5: Stylized CLI (Current Phase)
 
 - [ ] Scaffold interactive command-line interface.
 - [ ] Implement query menus for tuning selection and chord/scale generation.
